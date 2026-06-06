@@ -1,0 +1,3 @@
+philosophers
+*.o
+*/*.o
