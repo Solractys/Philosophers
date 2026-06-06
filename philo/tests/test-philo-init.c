@@ -11,6 +11,13 @@ int	should_init_valid_rule_struct(void)
 	ASSERT_EQ(rules->time_to_die, 800);
 	ASSERT_EQ(rules->time_to_eat, 300);
 	ASSERT_EQ(rules->time_to_sleep, 300);
+	ASSERT_NOT_NULL(rules->philos);
+	int i = 0;
+	while (i < rules->number_of_philosophers)
+	{
+		ASSERT_NOT_NULL(rules->philos[i].left_fork);
+		i++;
+	}
 	free_rules(rules);
 	return (EXIT_SUCCESS);
 }
@@ -26,6 +33,14 @@ int	should_create_rule_struct_with_optional_meals(void)
 	ASSERT_EQ(rules->time_to_eat, 300);
 	ASSERT_EQ(rules->time_to_sleep, 300);
 	ASSERT_EQ(rules->number_of_meals, 5);
+	ASSERT_NOT_NULL(rules->philos);
+	int i = 0;
+	while (i < rules->number_of_philosophers)
+	{
+		ASSERT_NOT_NULL(rules->philos[i].left_fork);
+		i++;
+	}
+	ASSERT_EQ(i, rules->number_of_philosophers);
 	free_rules(rules);
 	return (EXIT_SUCCESS);
 }
@@ -102,8 +117,14 @@ int	should_init_forks_and_philosophers(void)
 	t_rule *rules;
 	rules = init_rules(5, configs);
 	ASSERT_NOT_NULL(rules);
-	ASSERT_NOT_NULL(rules->forks);
 	ASSERT_NOT_NULL(rules->philos);
+	int i = 0;
+	while (i < rules->number_of_philosophers)
+	{
+		ASSERT_NOT_NULL(rules->philos[i].left_fork);
+		i++;
+	}
+	ASSERT_EQ(i, rules->number_of_philosophers);
 	free_rules(rules);
 
 	return (EXIT_SUCCESS);

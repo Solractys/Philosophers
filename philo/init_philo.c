@@ -11,19 +11,19 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-
 int	init_forks(t_rule *rules)
 {
-	int	i;
+	int		i;
 
 	i = 0;
-	rules->forks = malloc(sizeof(t_fork) * rules->number_of_philosophers);
-	if (!rules->forks)
-		return (0);
 	while (i < rules->number_of_philosophers)
 	{
-		rules->forks[i].id = i;
-		pthread_mutex_init(&rules->forks[i].mutex, NULL);
+		rules->philos[i].left_fork = malloc(sizeof(t_fork));
+		if (!rules->philos[i].left_fork)
+			return (0);
+		if (pthread_mutex_init(&rules->philos[i].left_fork->mutex, NULL) != 0)
+			return (0);
+		rules->philos[i].left_fork->id = i;
 		i++;
 	}
 	return (1);
@@ -44,6 +44,8 @@ int	init_philosophers(t_rule *rules)
 		rules->philos[i].rules = rules;
 		i++;
 	}
+	if (!init_forks(rules))
+		return (0);
 	return (1);
 }
 
@@ -65,7 +67,6 @@ t_rule	*init_rules(int ac, char **av)
 	rules = malloc(sizeof(t_rule));
 	if (!rules)
 		return (NULL);
-	rules->forks = NULL;
 	rules->philos = NULL;
 	rules->number_of_philosophers = ft_atoi(av[1]);
 	rules->time_to_die = ft_atoi(av[2]);
@@ -74,7 +75,7 @@ t_rule	*init_rules(int ac, char **av)
 	rules->number_of_meals = -1;
 	if (ac == 6)
 		rules->number_of_meals = ft_atoi(av[5]);
-	if (!validade_times(rules) || !init_forks(rules) || !init_philosophers(rules))
+	if (!validade_times(rules) || !init_philosophers(rules))
 	{
 		free_rules(rules);
 		return (NULL);

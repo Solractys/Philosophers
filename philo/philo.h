@@ -20,6 +20,7 @@ typedef struct s_philo
 	int			id;
 	pthread_t	thread;
 	long		last_meal;
+	t_fork		*left_fork;
 	t_rule		*rules;
 } t_philo;
 
@@ -30,7 +31,6 @@ typedef struct  s_rule
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		number_of_meals;
-	t_fork	*forks;
 	t_philo	*philos;
 }	t_rule;
 
