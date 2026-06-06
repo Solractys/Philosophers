@@ -8,7 +8,7 @@ t_philo	*init_philo(int ac, char **av)
 	if (!philo)
 		return (NULL);
 	philo->number_of_philosophers = ft_atoi(av[1]);
-	if (philo->number_of_philosophers == 200 || philo->number_of_philosophers <= 1)
+	if (philo->number_of_philosophers >= 200 || philo->number_of_philosophers <= 1)
 	{
 		print_error("Warning: Number of philosophers is less than 0 or equal to 200\n");
 		return (NULL);
