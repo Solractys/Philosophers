@@ -42,6 +42,7 @@ int	init_philosophers(t_rule *rules)
 		rules->philos[i].id = i + 1;
 		rules->philos[i].last_meal = 0;
 		rules->philos[i].rules = rules;
+		rules->philos[i].left_fork[i] = rules->forks[i];
 		i++;
 	}
 	return (1);

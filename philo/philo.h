@@ -20,6 +20,7 @@ typedef struct s_philo
 	int			id;
 	pthread_t	thread;
 	long		last_meal;
+	t_fork		*left_fork;
 	t_rule		*rules;
 } t_philo;
 
