@@ -11,6 +11,7 @@
 # Paths are relative to this tests/ folder.
 PROJECT_SRCS = ../utils/ft_atoi.c \
 				../utils/print_error.c \
+				../utils/free_rules.c \
 				../init_philo.c
 
 

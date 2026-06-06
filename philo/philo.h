@@ -13,19 +13,33 @@ typedef struct s_fork
 	int				id;
 }	t_fork;
 
-typedef struct  s_philo
+typedef struct s_rule t_rule;
+
+typedef struct s_philo
+{
+	int			id;
+	pthread_t	thread;
+	long		last_meal;
+	t_rule		*rules;
+} t_philo;
+
+typedef struct  s_rule
 {
 	int		number_of_philosophers;
 	int		time_to_die;
 	int		time_to_eat;
 	int		time_to_sleep;
-	int		number_of_times_each_philosopher_must_eat;
+	int		number_of_meals;
 	t_fork	*forks;
-}	t_philo;
+	t_philo	*philos;
+}	t_rule;
 
-t_philo	*init_philo(int ac, char **av);
+t_rule	*init_rules(int ac, char **av);
 int		ft_atoi(char *str);
+int		init_forks(t_rule *rules);
+int		init_philosophers(t_rule *rules);
+int		validade_times(t_rule *rules);
 void	print_error(char *str);
-void 	print_struct(t_philo philo);
+void	free_rules(t_rule *rules);
 
 #endif

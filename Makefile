@@ -5,9 +5,10 @@ SRC_DIR		= philo
 OBJ_DIR		= obj
 
 SRC_FILES	= main.c \
-			  init_philo.c \
-			  utils/ft_atoi.c \
-			  utils/print_error.c
+			init_philo.c \
+			utils/ft_atoi.c \
+			utils/print_error.c \
+			utils/free_rules.c
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))

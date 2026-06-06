@@ -15,19 +15,19 @@
 
 int	main(int ac, char **av)
 {
-	t_philo *philo;
+	t_rule	*rules;
 
 	if (ac < 5 || ac > 6)
 	{
 		print_error("Error: Invalid number of arguments\n");
 		return (1);
 	}
-	philo = init_philo(ac, av);
-	if (!philo)
+	rules = init_rules(ac, av);
+	if (!rules)
 	{
 		print_error("Error: Invalid arguments\n");
 		return (1);
-		print_struct(*philo);
 	}
+	free_rules(rules);
 	return (0);
 }
