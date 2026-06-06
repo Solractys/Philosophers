@@ -1,6 +1,6 @@
 #include "philo.h"
 
-void print_struct(philo_t philo)
+void print_struct(t_philo philo)
 {
 	printf("Number of Philosophers: %d\n", philo.number_of_philosophers);
 	printf("Time to Die: %d\n", philo.time_to_die);
@@ -46,21 +46,32 @@ int	check_args_int(int ac, char **av)
 
 int	ft_atoi(char *str)
 {
-	int i;
-	int	num;
+	int	i;
+	int	sign;
+	int	result;
 
 	i = 0;
-	num = 0;
-	while (str[i] >=  '0' && str[i] <= '9')
+	sign = 1;
+	result = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		num = num * 10 + (str[i++] - '0');
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	return (num);
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
 }
 
-philo_t	init_philo(int ac, char **av)
+t_philo	init_philo(int ac, char **av)
 {
-	philo_t	philo;
+	t_philo	philo;
 
 	philo.number_of_philosophers = ft_atoi(av[1]);
 	if (philo.number_of_philosophers <= 200)
@@ -76,14 +87,14 @@ philo_t	init_philo(int ac, char **av)
 	return (philo);
 }
 
-void	init_mutexes(philo_t *philo)
+void	init_mutexes(t_philo *philo)
 {
 
 }
 
 int	main(int ac, char **av)
 {
-	philo_t philo;
+	t_philo philo;
 
 	if (ac < 5 || ac > 6)
 	{
