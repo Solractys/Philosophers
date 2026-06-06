@@ -47,6 +47,7 @@ unit-tests:
 
 clean:
 	rm -rf philosophers
+	rm -rf $(OBJ_DIR)
 	@$(MAKE) clean -C ./philo/tests
 
 fclean: clean
