@@ -23,5 +23,9 @@ typedef struct  s_philo
 	t_fork	*forks;
 }	t_philo;
 
+t_philo	*init_philo(int ac, char **av);
+int		ft_atoi(char *str);
+void	print_error(char *str);
+void 	print_struct(t_philo philo);
 
 #endif

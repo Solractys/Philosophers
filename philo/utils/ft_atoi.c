@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csilva-s <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/05 23:57:52 by csilva-s          #+#    #+#             */
-/*   Updated: 2026/06/06 00:07:48 by csilva-s         ###   ########.fr       */
+/*   Created: 2026/06/06 00:00:10 by csilva-s          #+#    #+#             */
+/*   Updated: 2026/06/06 00:00:12 by csilva-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-
-int	main(int ac, char **av)
+int	ft_atoi(char *str)
 {
-	t_philo *philo;
+	int	i;
+	int	sign;
+	int	result;
 
-	if (ac < 5 || ac > 6)
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		print_error("Error: Invalid number of arguments\n");
-		return (1);
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	philo = init_philo(ac, av);
-	if (!philo)
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		print_error("Error: Invalid arguments\n");
-		return (1);
-		print_struct(*philo);
+		result = result * 10 + (str[i] - '0');
+		i++;
 	}
-	return (0);
+	return (result * sign);
 }
