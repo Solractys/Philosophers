@@ -1,3 +1,4 @@
 philosophers
 *.o
 */*.o
+*.log
