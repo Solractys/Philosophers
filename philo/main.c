@@ -21,29 +21,6 @@ void	print_error(char *str)
 	}
 }
 
-int	check_args_int(int ac, char **av)
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	while(i < ac)
-	{
-		j = 0;
-		while (av[i][j])
-		{
-			if (av[i][j] < '0' || av[i][j] > '9')
-			{
-				print_error("Error: Non-integer argument detected\n");
-				return (1);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (0);
-}
-
 int	ft_atoi(char *str)
 {
 	int	i;
@@ -69,41 +46,42 @@ int	ft_atoi(char *str)
 	return (result * sign);
 }
 
-t_philo	init_philo(int ac, char **av)
+t_philo	*init_philo(int ac, char **av)
 {
-	t_philo	philo;
+	t_philo	*philo;
 
-	philo.number_of_philosophers = ft_atoi(av[1]);
-	if (philo.number_of_philosophers <= 200)
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		return (NULL);
+	philo->number_of_philosophers = ft_atoi(av[1]);
+	if (philo->number_of_philosophers > 200 || philo->number_of_philosophers <= 1)
 	{
-		print_error("Warning: Number of philosophers is less than or equal to 200\n");
-		return (philo);
+		print_error("Warning: Number of philosophers is less than 0 or equal to 200\n");
+		return (NULL);
 	}
-	philo.time_to_die = ft_atoi(av[2]);
-	philo.time_to_eat = ft_atoi(av[3]);
-	philo.time_to_sleep = ft_atoi(av[4]);
+	philo->time_to_die = ft_atoi(av[2]);
+	philo->time_to_eat = ft_atoi(av[3]);
+	philo->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		philo.number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+		philo->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	return (philo);
-}
-
-void	init_mutexes(t_philo *philo)
-{
-
 }
 
 int	main(int ac, char **av)
 {
-	t_philo philo;
+	t_philo *philo;
 
 	if (ac < 5 || ac > 6)
 	{
 		print_error("Error: Invalid number of arguments\n");
 		return (1);
 	}
-	if (check_args_int(ac, av))
-		return (1);
 	philo = init_philo(ac, av);
-	print_struct(philo);
+	if (!philo)
+	{
+		print_error("Error: Invalid arguments\n");
+		return (1);
+	}
+	print_struct(*philo);
 	return (0);
 }
