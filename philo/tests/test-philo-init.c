@@ -174,6 +174,36 @@ int should_fail_with_invalid_integer(void)
     return (EXIT_SUCCESS);
 }
 
+int	should_create_left_and_right_forks(void)
+{
+	char *configs[5] = {"filename", "5", "800", "300", "300"};
+	t_rule *rules;
+	rules = init_rules(5, configs);
+	ASSERT_NOT_NULL(rules);
+	int i = 0;
+	while (i < rules->number_of_philosophers)
+	{
+		ASSERT_NOT_NULL(rules->philos[i].left_fork);
+		ASSERT_NOT_NULL(rules->philos[i].right_fork);
+		i++;
+	}
+	ASSERT_EQ(i, rules->number_of_philosophers);
+	free_rules(rules);
+	return (EXIT_SUCCESS);
+}
+
+int	should_create_left_and_right_forks_with_one_philo(void)
+{
+	char *configs[5] = {"filename", "1", "800", "300", "300"};
+	t_rule *rules;
+	rules = init_rules(5, configs);
+	ASSERT_NOT_NULL(rules);
+	ASSERT_NOT_NULL(rules->philos[0].left_fork);
+	ASSERT_NOT_NULL(rules->philos[0].right_fork);
+	free_rules(rules);
+	return (EXIT_SUCCESS);
+}
+
 int	main(void)
 {
 	RUN_TEST(should_init_valid_rule_struct);
@@ -189,5 +219,7 @@ int	main(void)
 	RUN_TEST(should_initialize_with_default_meals);
 	RUN_TEST(should_guard_free_rules_on_null);
 	RUN_TEST(should_fail_with_invalid_integer);
+	RUN_TEST(should_create_left_and_right_forks);
+	RUN_TEST(should_create_left_and_right_forks_with_one_philo);
 	return (0);
 }
