@@ -21,19 +21,19 @@
 > Levantados a partir do código atual. Vários **bloqueiam fases posteriores**, então devem ser
 > resolvidos antes de seguir. As referências `arquivo:linha` apontam para o ponto exato.
 
-- [ ] **B1 — `validade_times` rejeita `n = 1`** · `philo/init_philo.c:58`
+- [x] **B1 — `validade_times` rejeita `n = 1`** · `philo/init_philo.c:58`
 
   A condição `number_of_philosophers <= 1` trata 1 filósofo como entrada inválida, então
   `./philo 1 800 200 200` sai como "Invalid arguments". Isso **contradiz diretamente** a Fase 3.1,
   a 5.2 e a primeira linha da tabela de testes (5.3) — o subject exige que `n = 1` rode e o
   filósofo morra. **Correção:** aceitar `n == 1` (usar `< 1` em vez de `<= 1`).
 
-- [ ] **B2 — `n >= 200` rejeita o próprio 200** · `philo/init_philo.c:59`
+- [x] **B2 — `n >= 200` rejeita o próprio 200** · `philo/init_philo.c:59`
 
   O teto de 200 não é exigido pelo subject (é autoimposto) e ainda corta o valor 200 em si.
   **Correção:** remover o limite ou, se quiser mantê-lo, usar `> 200`.
 
-- [ ] **B3 — Parsing não detecta lixo numérico nem overflow** · `philo/utils/ft_atoi.c`, `philo/init_philo.c:55`
+- [x] **B3 — Parsing não detecta lixo numérico nem overflow** · `philo/utils/ft_atoi.c`, `philo/init_philo.c:55`
 
   `ft_atoi("abc")` devolve `0` e `ft_atoi("12x")` devolve `12` — ambos passam silenciosamente.
   `validade_times` só rejeita valores `< 0`, então `time_to_* == 0` é aceito e `number_of_meals`

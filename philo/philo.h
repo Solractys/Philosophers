@@ -48,7 +48,8 @@ typedef struct s_rule
 }	t_rule;
 
 t_rule	*init_rules(int ac, char **av);
-int		init_forks(t_rule *rules);
+int		init_left_forks(t_rule *rules);
+void	link_forks(t_rule *rules);
 int		init_philosophers(t_rule *rules);
 void	print_error(char *str);
 void	free_rules(t_rule *rules);

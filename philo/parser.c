@@ -62,7 +62,7 @@ int	check_arg(char *s)
 	while (s[i])
 	{
 		if (s[i] < '0' || s[i] > '9')
-		    return (1);
+			return (1);
 		i++;
 	}
 	return (0);

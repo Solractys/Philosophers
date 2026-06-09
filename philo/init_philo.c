@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int	init_forks(t_rule *rules)
+int	init_left_forks(t_rule *rules)
 {
 	int		i;
 
@@ -23,11 +23,29 @@ int	init_forks(t_rule *rules)
 		if (!rules->philos[i].left_fork)
 			return (0);
 		if (pthread_mutex_init(&rules->philos[i].left_fork->mutex, NULL) != 0)
+		{
+			free(rules->philos[i].left_fork);
+			rules->philos[i].left_fork = NULL;
 			return (0);
+		}
 		rules->philos[i].left_fork->id = i;
 		i++;
 	}
 	return (1);
+}
+
+void	link_forks(t_rule *rules)
+{
+	int		i;
+	long	n;
+
+	i = 0;
+	n = rules->number_of_philosophers;
+	while (i < n)
+	{
+		rules->philos[i].right_fork = rules->philos[(i + 1) % n].left_fork;
+		i++;
+	}
 }
 
 int	init_philosophers(t_rule *rules)
@@ -42,12 +60,14 @@ int	init_philosophers(t_rule *rules)
 	{
 		rules->philos[i].id = i + 1;
 		rules->philos[i].last_meal = 0;
+		rules->philos[i].left_fork = NULL;
+		rules->philos[i].right_fork = NULL;
 		rules->philos[i].rules = rules;
 		i++;
 	}
-	//TODO: chamar a link_forks no if 
-	if (!init_forks(rules))
+	if (!init_left_forks(rules))
 		return (0);
+	link_forks(rules);
 	return (1);
 }
 
