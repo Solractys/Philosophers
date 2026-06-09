@@ -166,6 +166,14 @@ int	should_fail_with_invalid_strings_combinations(void)
 	return (EXIT_SUCCESS);
 }
 
+int should_fail_with_invalid_integer(void)
+{
+    char *inputs[5] = {"filename", "+5", "8+00", "300", "300"};
+    t_rule *rules = init_rules(5, inputs);
+    ASSERT_NULL(rules);
+    return (EXIT_SUCCESS);
+}
+
 int	main(void)
 {
 	RUN_TEST(should_init_valid_rule_struct);
@@ -180,5 +188,6 @@ int	main(void)
 	RUN_TEST(should_init_forks_and_philosophers);
 	RUN_TEST(should_initialize_with_default_meals);
 	RUN_TEST(should_guard_free_rules_on_null);
+	RUN_TEST(should_fail_with_invalid_integer);
 	return (0);
 }

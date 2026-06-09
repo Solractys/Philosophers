@@ -39,8 +39,8 @@ long	ft_atol(char *str)
 
 int	validade_times(t_rule *rules)
 {
-	if (rules->time_to_die < 0 || rules->time_to_eat < 0
-		|| rules->time_to_sleep < 0)
+	if (rules->time_to_die <= 0 || rules->time_to_eat <= 0
+		|| rules->time_to_sleep <= 0)
 		return (0);
 	else if (rules->number_of_philosophers < 1
 		|| rules->number_of_philosophers > 200)
@@ -55,12 +55,15 @@ int	check_arg(char *s)
 	i = 0;
 	if (ft_strlen(s) >= 11)
 		return (1);
-	while (s && s[i])
+	if (s[i] == '+')
+		i++;
+	if (!s[i])
+	    return (1);
+	while (s[i])
 	{
-		if ((s[i] >= '0' && s[i] <= '9') || s[i] == '+')
-			i++;
-		else
-			return (1);
+		if (s[i] < '0' || s[i] > '9')
+		    return (1);
+		i++;
 	}
 	return (0);
 }
