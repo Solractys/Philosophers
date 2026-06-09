@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csilva-s <csilva-s@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 01:51:23 by csilva-s          #+#    #+#             */
+/*   Updated: 2026/06/09 03:13:01 by csilva-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
@@ -13,7 +25,7 @@ typedef struct s_fork
 	int				id;
 }	t_fork;
 
-typedef struct s_rule t_rule;
+typedef struct s_rule	t_rule;
 
 typedef struct s_philo
 {
@@ -21,25 +33,31 @@ typedef struct s_philo
 	pthread_t	thread;
 	long		last_meal;
 	t_fork		*left_fork;
+	t_fork		*right_fork;
 	t_rule		*rules;
-} t_philo;
+}	t_philo;
 
-typedef struct  s_rule
+typedef struct s_rule
 {
-	int		number_of_philosophers;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		number_of_meals;
-	t_philo	*philos;
+	long		number_of_philosophers;
+	long		time_to_die;
+	long		time_to_eat;
+	long		time_to_sleep;
+	long		number_of_meals;
+	t_philo		*philos;
 }	t_rule;
 
 t_rule	*init_rules(int ac, char **av);
-int		ft_atoi(char *str);
 int		init_forks(t_rule *rules);
 int		init_philosophers(t_rule *rules);
-int		validade_times(t_rule *rules);
 void	print_error(char *str);
 void	free_rules(t_rule *rules);
+
+// parser
+int		check_arg(char *s);
+int		parse_arguments(int ac, char **args);
+int		validade_times(t_rule *rules);
+long	ft_atol(char *str);
+size_t	ft_strlen(char *s);
 
 #endif

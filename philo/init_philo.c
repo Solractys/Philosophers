@@ -6,11 +6,12 @@
 /*   By: csilva-s <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 04:29:42 by csilva-s          #+#    #+#             */
-/*   Updated: 2026/06/06 04:29:43 by csilva-s         ###   ########.fr       */
+/*   Updated: 2026/06/09 03:02:29 by csilva-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
 int	init_forks(t_rule *rules)
 {
 	int		i;
@@ -44,18 +45,8 @@ int	init_philosophers(t_rule *rules)
 		rules->philos[i].rules = rules;
 		i++;
 	}
+	//TODO: chamar a link_forks no if 
 	if (!init_forks(rules))
-		return (0);
-	return (1);
-}
-
-int	validade_times(t_rule *rules)
-{
-	if (rules->time_to_die < 0 || rules->time_to_eat < 0 ||
-		rules->time_to_sleep < 0)
-		return (0);
-	else if (rules->number_of_philosophers <= 1 ||
-		rules->number_of_philosophers >= 200)
 		return (0);
 	return (1);
 }
@@ -64,17 +55,19 @@ t_rule	*init_rules(int ac, char **av)
 {
 	t_rule	*rules;
 
+	if (parse_arguments(ac, av))
+		return (NULL);
 	rules = malloc(sizeof(t_rule));
 	if (!rules)
 		return (NULL);
 	rules->philos = NULL;
-	rules->number_of_philosophers = ft_atoi(av[1]);
-	rules->time_to_die = ft_atoi(av[2]);
-	rules->time_to_eat = ft_atoi(av[3]);
-	rules->time_to_sleep = ft_atoi(av[4]);
+	rules->number_of_philosophers = ft_atol(av[1]);
+	rules->time_to_die = ft_atol(av[2]);
+	rules->time_to_eat = ft_atol(av[3]);
+	rules->time_to_sleep = ft_atol(av[4]);
 	rules->number_of_meals = -1;
 	if (ac == 6)
-		rules->number_of_meals = ft_atoi(av[5]);
+		rules->number_of_meals = ft_atol(av[5]);
 	if (!validade_times(rules) || !init_philosophers(rules))
 	{
 		free_rules(rules);
