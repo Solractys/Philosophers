@@ -27,6 +27,9 @@ int	main(int ac, char **av)
 		print_error("Error: Invalid arguments\n");
 		return (1);
 	}
+	// Start simluation
+
 	free_rules(rules);
+
 	return (0);
 }
