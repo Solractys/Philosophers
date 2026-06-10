@@ -1,4 +1,4 @@
-NAME		= philosophers
+NAME		= philo/philo
 CCFLAGS		= cc -Wall -Wextra -Werror -g3
 
 SRC_DIR		= philo
@@ -48,7 +48,7 @@ unit-tests:
 	@$(MAKE) -C ./philo/tests
 
 clean:
-	rm -rf philosophers
+	rm -rf philo/philo
 	rm -rf $(OBJ_DIR)
 	@$(MAKE) clean -C ./philo/tests
 
