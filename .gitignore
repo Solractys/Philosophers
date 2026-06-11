@@ -1,4 +1,4 @@
-philosophers
+philo/philo
 *.o
 */*.o
 *.log
