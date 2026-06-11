@@ -1,4 +1,4 @@
-NAME		= philosophers
+NAME		= philo/philo
 CCFLAGS		= cc -Wall -Wextra -Werror -g3
 
 SRC_DIR		= philo
