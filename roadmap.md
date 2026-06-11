@@ -8,11 +8,14 @@
 >   `time_to_sleep`, `number_of_meals` (sentinela `-1` quando o 5º argumento é omitido) e
 >   `t_philo *philos`.
 > - `t_philo` — contexto de cada filósofo: `id`, `pthread_t thread`, `last_meal`,
->   `t_fork *left_fork` e `t_rule *rules` (ponteiro de volta).
+>   `t_fork *left_fork`, `t_fork *right_fork` e `t_rule *rules` (ponteiro de volta).
 > - `t_fork` — um garfo: `pthread_mutex_t mutex` + `int id`.
 >
 > Não há array central de `pthread_t` nem de `pthread_mutex_t`: cada thread vive dentro do seu
-> `t_philo` e cada garfo é um struct alocado individualmente.
+> `t_philo`. Existem **exatamente `n` garfos**: cada filósofo aloca o seu `left_fork`
+> individualmente, e `right_fork` é apenas um **ponteiro-alias** para o `left_fork` do vizinho
+> (`philos[(i+1)%n].left_fork`) — não é uma alocação nova. Por isso só os `left_fork` são
+> destruídos/liberados na limpeza; liberar `right_fork` seria double-free.
 
 ---
 
@@ -41,14 +44,17 @@
   acontece. **Correção:** validar que cada argumento é composto só por dígitos (com sinal `+`
   opcional) antes de converter, rejeitar overflow de `int`, e validar `number_of_meals >= 0`.
 
-- [ ] **B4 — Cleanup quebra em inicialização parcial** · `philo/init_philo.c:41-47`, `philo/utils/free_rules.c:8`
+- [x] **B4 — Cleanup quebra em inicialização parcial** · `philo/init_philo.c`, `philo/utils/free_rules.c`
 
-  No loop de `init_philosophers` o campo `left_fork` **não é inicializado** — ele só recebe valor
-  dentro de `init_forks`. Se `init_forks` falhar num `malloc` intermediário, os filósofos seguintes
-  ficam com `left_fork` apontando para lixo. Aí `destroy_forks` — que só verifica `philos[0].left_fork`
-  — percorre todos e chama `pthread_mutex_destroy`/`free` em ponteiro inválido → segfault.
-  **Correção:** inicializar `philos[i].left_fork = NULL` no loop de `init_philosophers` e fazer
-  `destroy_forks` pular os `NULL`.
+  No loop de `init_philosophers` os campos de garfo **não eram inicializados** — só recebiam valor
+  durante a alocação. Se essa falhasse num `malloc`/`mutex_init` intermediário, os filósofos
+  seguintes ficavam com `left_fork` apontando para lixo. Aí `destroy_forks` — que só verificava
+  `philos[0].left_fork` — percorria todos e chamava `pthread_mutex_destroy`/`free` em ponteiro
+  inválido → segfault.
+  **Resolvido:** `init_philosophers` zera `left_fork = NULL` e `right_fork = NULL` no loop;
+  `init_left_forks` libera o bloco e o deixa `NULL` se o `mutex_init` falhar; e `destroy_forks`
+  agora testa cada `left_fork` individualmente, pulando os `NULL`. Verificado com Valgrind
+  (`--leak-check=full`) sem leaks para `n = 1`, `2`, `5` e `200`.
 
 - [ ] **B5 — `last_meal` inicializado com `0`** · `philo/init_philo.c:44` *(latente)*
 
@@ -106,25 +112,31 @@
   não zero — porque o monitor começa a checar logo após as threads serem criadas; um zero faria
   o monitor declarar morte antes do primeiro ciclo (exatamente o **B5**).
 
-  > **Pendências:** (1) o campo `meals_eaten` ainda não existe no struct; (2) como `start_time` só
-  > é conhecido no lançamento das threads, a inicialização real de `last_meal` acontece na **Fase
-  > 4.2**, não aqui; (3) inicializar `left_fork = NULL` aqui é o que evita o **B4**.
+  > **Estado atual:** `init_philosophers` já preenche `id`, `last_meal = 0`, `rules` e zera
+  > `left_fork`/`right_fork` (`NULL`) — este último resolve o **B4**. **Pendências:** (1) o campo
+  > `meals_eaten` ainda não existe no struct; (2) como `start_time` só é conhecido no lançamento
+  > das threads, a inicialização real de `last_meal` acontece na **Fase 4.2**, não aqui.
 
-- [ ] **1.3 — Inicialização dos garfos (mutex por garfo)** — *implementação inicial em `init_philo.c` (`init_forks`)*
+- [x] **1.3 — Inicialização dos garfos (mutex por garfo)** — *em `init_philo.c` (`init_left_forks` + `link_forks`)*
 
-  Modelo atual: **cada filósofo aloca o próprio garfo esquerdo**. Para cada `i`, `init_forks` faz
-  `philos[i].left_fork = malloc(sizeof(t_fork))`, `pthread_mutex_init(&left_fork->mutex, NULL)` e
-  `left_fork->id = i`. **Não existe campo `right_fork`** — o garfo direito do filósofo `i` é o garfo
-  esquerdo do vizinho: `philos[(i + 1) % n].left_fork`.
+  Modelo adotado: **existem exatamente `n` garfos** e cada filósofo aloca o próprio garfo esquerdo.
+  A inicialização acontece em **dois passos**, e a ordem importa:
+  1. `init_left_forks` — para cada `i`: `philos[i].left_fork = malloc(sizeof(t_fork))`,
+     `pthread_mutex_init(&left_fork->mutex, NULL)` e `left_fork->id = i`. Se o `mutex_init` falhar,
+     libera o bloco e o deixa `NULL` (cobre o **B4**).
+  2. `link_forks` — atribui `philos[i].right_fork = philos[(i + 1) % n].left_fork`. **Sem `malloc`
+     e sem `mutex_init`**: o garfo direito é só um *alias* para o garfo esquerdo do vizinho.
 
   **Por quê:** cada garfo é um recurso compartilhado entre dois filósofos vizinhos; o mutex garante
   apenas um portador por vez. O índice `% n` fecha o círculo — o último filósofo divide um garfo
-  com o primeiro. Sem esse ciclo, o filósofo `n-1` não teria garfo direito.
+  com o primeiro. O link **precisa** ser um segundo passo separado: na iteração `i`, o `left_fork`
+  do vizinho `i+1` ainda não foi alocado, então ligá-lo no mesmo loop leria ponteiro lixo.
 
-  > **Decisão de arquitetura:** acessar o garfo direito via vizinho (`philos[(i+1)%n].left_fork`)
-  > funciona, mas deixa a Fase 3.1 mais verbosa. Adicionar um campo `right_fork` a `t_philo`
-  > apontando para o mesmo mutex simplifica `take_forks`/`put_forks`. Escolha uma das duas
-  > abordagens e mantenha consistente em todo o código.
+  > **Decisão de arquitetura (fechada):** adotado o campo `right_fork` em `t_philo`, apontando para
+  > o mesmo mutex do garfo esquerdo do vizinho — deixa `take_forks`/`put_forks` (Fase 3.1) direto,
+  > sem recalcular `philos[(i+1)%n].left_fork`. **Armadilha central:** `right_fork` **não** é um
+  > garfo novo. Dar `malloc`/`mutex_init` nele cria `2n` garfos sem compartilhamento (vizinhos
+  > travando mutexes distintos), o que destrói a exclusão mútua e ainda vaza memória. É só ponteiro.
 
 ---
 
@@ -190,8 +202,9 @@
 
   Implementar `take_forks(t_philo *p)` e `put_forks(t_philo *p)`.
 
-  Garfo esquerdo do filósofo `i`: `philos[i].left_fork`. Garfo direito: `philos[(i + 1) % n].left_fork`
-  (o esquerdo do vizinho) — ou o campo `right_fork`, se você adotar a opção da Fase 1.3.
+  Garfo esquerdo do filósofo `i`: `philos[i].left_fork`. Garfo direito: `philos[i].right_fork`
+  (campo já populado por `link_forks` na Fase 1.3; equivale ao `left_fork` do vizinho,
+  `philos[(i + 1) % n].left_fork`).
 
   Estratégia anti-deadlock: filósofos com `id` **par** pegam o garfo **direito** primeiro;
   filósofos com `id` **ímpar** pegam o **esquerdo** primeiro. (Lembre que `id` é 1-indexado —
@@ -290,7 +303,7 @@
 - [ ] **5.1 — Cleanup completo** — *parcialmente em `philo/utils/free_rules.c`*
 
   Após todos os joins:
-  - `pthread_mutex_destroy` no mutex de cada garfo (`philos[i].left_fork->mutex`) e `free` de cada `left_fork`
+  - `pthread_mutex_destroy` no mutex de cada garfo (`philos[i].left_fork->mutex`) e `free` de cada `left_fork` — **nunca** o `right_fork` (é alias)
   - `pthread_mutex_destroy` no mutex de print
   - `pthread_mutex_destroy` no mutex de `stop`
   - `pthread_mutex_destroy` no mutex de `last_meal` de cada filósofo
@@ -303,9 +316,10 @@
   os joins, o que garante que nenhum mutex está em uso.
 
   > **Estado atual:** `destroy_forks`/`free_philosophers`/`free_rules` já liberam os garfos e o
-  > `rules`, mas (1) ainda não destroem os mutexes de print/`stop`/`last_meal` (que ainda não
-  > existem) e (2) têm o **B4** pendente. Não há array central `forks` — cada garfo é liberado
-  > individualmente.
+  > `rules`, com o **B4 resolvido** — `destroy_forks` pula `left_fork` `NULL` e **só libera os
+  > `left_fork`** (nunca `right_fork`, que é alias; liberá-lo seria double-free). Ainda falta
+  > destruir os mutexes de print/`stop`/`last_meal` (que ainda não existem). Não há array central
+  > `forks` — cada garfo é liberado individualmente.
 
 - [ ] **5.2 — Tratamento do caso `n = 1`**
 

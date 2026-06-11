@@ -6,7 +6,7 @@
 /*   By: csilva-s <csilva-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 02:34:22 by csilva-s          #+#    #+#             */
-/*   Updated: 2026/06/09 03:15:46 by csilva-s         ###   ########.fr       */
+/*   Updated: 2026/06/11 02:59:31 by csilva-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	check_arg(char *s)
 	if (s[i] == '+')
 		i++;
 	if (!s[i])
-	    return (1);
+		return (1);
 	while (s[i])
 	{
 		if (s[i] < '0' || s[i] > '9')
