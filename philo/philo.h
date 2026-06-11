@@ -19,12 +19,6 @@
 # include <stdio.h>
 # include <string.h>
 
-typedef struct s_fork
-{
-	pthread_mutex_t	mutex;
-	int				id;
-}	t_fork;
-
 typedef struct s_rule	t_rule;
 
 typedef struct s_philo
@@ -32,8 +26,8 @@ typedef struct s_philo
 	int			id;
 	pthread_t	thread;
 	long		last_meal;
-	t_fork		*left_fork;
-	t_fork		*right_fork;
+	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		*right_fork;
 	t_rule		*rules;
 }	t_philo;
 
