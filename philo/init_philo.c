@@ -13,8 +13,6 @@
 #include "philo.h"
 #include <pthread.h>
 
-
-//TODO: Refatorar a funćão pra alocar mutexes ao invés de só cria-los
 int	init_left_forks(t_rule *rules)
 {
 	int		i;
@@ -22,19 +20,23 @@ int	init_left_forks(t_rule *rules)
 	i = 0;
 	while (i < rules->number_of_philosophers)
 	{
+		rules->philos[i].left_fork = malloc(sizeof(pthread_mutex_t));
 		if (!rules->philos[i].left_fork)
+		{
+			rules->philos[i].left_fork = NULL;
 			return (0);
+		}
 		if (pthread_mutex_init(rules->philos[i].left_fork, NULL) != 0)
 		{
 			pthread_mutex_destroy(rules->philos[i].left_fork);
+			free(rules->philos[i].left_fork);
 			return (0);
 		}
 		i++;
 	}
 	return (1);
 }
-//TODO: Essa funćão deve ser refatorada porque o garfo direito não deve ser uma cópia, e sim o mesmo objeto na memória, ou seja, deve usar um
-// fork allocado pra usar sua referência nessa funćão.
+
 void	link_forks(t_rule *rules)
 {
 	int		i;

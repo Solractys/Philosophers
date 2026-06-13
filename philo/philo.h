@@ -23,12 +23,12 @@ typedef struct s_rule	t_rule;
 
 typedef struct s_philo
 {
-	int			id;
-	pthread_t	thread;
-	long		last_meal;
+	int					id;
+	pthread_t			thread;
+	long				last_meal;
 	pthread_mutex_t		*left_fork;
 	pthread_mutex_t		*right_fork;
-	t_rule		*rules;
+	t_rule				*rules;
 }	t_philo;
 
 typedef struct s_rule

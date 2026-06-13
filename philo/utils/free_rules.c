@@ -19,9 +19,9 @@ void	destroy_forks(t_rule *rules)
 	i = 0;
 	while (i < rules->number_of_philosophers)
 	{
-		if (rules->philos[i].left_fork)
+		if (rules->philos[i].left_fork != NULL)
 		{
-			pthread_mutex_destroy(&rules->philos[i].left_fork->mutex);
+			pthread_mutex_destroy(rules->philos[i].left_fork);
 			free(rules->philos[i].left_fork);
 		}
 		i++;
