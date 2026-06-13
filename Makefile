@@ -14,25 +14,8 @@ SRC_FILES	= main.c \
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
-GREEN		= \033[0;32m
-RESET		= \033[0;31m
-
-BANNER =	XXX     XX                                                     XXX   \
-			XX      XX          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX            XX \
-			X      XX       XXXXX                                XXXXX         XX\
-			X     XX     XXXX        XXXXXXXXXXXXXXXXXXXXXXX         XXX        X\
-			X     X     XX        XXXX                      XXX        XXX      X\
-			X     X     X       XX                            XX         X       \
-			X    XX    XX     XXX     ╔════════════╗           XX         X      \
-			X    X     X      X       ║PHILOSOPHERS║            X         X      \
-			X    X     X      X       ╚════════════╝           XX         X      \
-			XX   X    X       X                 XX            XX          X      \
-			 X   X    XX      XX            XXXX             XX          XX     X\
-			 XX  X     XX      XXXXXXXXXXXXXX              XXX           X      X\
-			  XX X      XXXXX                           XXXX           XX      XX\
-			   XXX           XXX XXXXXXX        XXXXXXXXX            XXX      XX \
-				XXX                    XXXXXXXXXX                  XXX       XX  \
-				 XXX                                            XXXX       XXX   \
+GREEN		= \033[0;34m
+RESET		= \033[0m
 
 all: $(NAME)
 
@@ -42,8 +25,16 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(NAME): $(OBJS)
 	$(CCFLAGS) $(OBJS) -o $(NAME)
-	@echo "$(GREEN)$(BANNER)$<$(RESET)"
-
+	@printf "$(GREEN)"
+	@printf "     _________    ___  ___     ___     ___        ______ \n"
+	@printf "    /\   __   \  /\  \ \  \   /\  \   /\  \      /\  __ \ \n"
+	@printf "    \ \  \_/\  \ \ \  \_\  \  \ \  \  \ \  \     \ \ \ \ \ \n"
+	@printf "     \ \   _____\ \ \   __  \  \ \  \  \ \  \     \ \ \ \ \ \n"
+	@printf "      \ \  \____/  \ \  \ \  \  \ \  \  \ \  \____ \ \ \_\ \ \n"
+	@printf "       \ \__\       \ \__\ \__\  \ \__\  \ \______\ \ \_____\ \n"
+	@printf "        \/__/        \/__/\/__/   \/__/   \/______/  \/_____/  \n"
+	@printf "\t\t\t\t\t\t by csilva-s\n"
+	@printf "$(RESET)"
 unit-tests:
 	@$(MAKE) -C ./philo/tests
 
