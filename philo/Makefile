@@ -1,7 +1,7 @@
-NAME		= philo/philo
+NAME		= philo
 CCFLAGS		= cc -Wall -Wextra -Werror -g3
 
-SRC_DIR		= philo
+SRC_DIR		= ./
 OBJ_DIR		= obj
 
 SRC_FILES	= main.c \
@@ -9,6 +9,9 @@ SRC_FILES	= main.c \
 						init_philo.c \
 						utils/utils.c \
 						utils/print_error.c \
+						simulation.c \
+						philo_routine.c \
+						monitor.c \
 						utils/free_rules.c
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
@@ -36,15 +39,15 @@ $(NAME): $(OBJS)
 	@printf "\t\t\t\t\t\t by csilva-s\n"
 	@printf "$(RESET)"
 unit-tests:
-	@$(MAKE) -C ./philo/tests
+	@$(MAKE) -C ./tests
 
 clean:
-	rm -rf philosophers
+	rm -rf philo
 	rm -rf $(OBJ_DIR)
-	@$(MAKE) clean -C ./philo/tests
+	@$(MAKE) clean -C ./tests
 
 fclean: clean
-	@$(MAKE) fclean -C ./philo/tests
+	@$(MAKE) fclean -C ./tests
 
 re: fclean all
 

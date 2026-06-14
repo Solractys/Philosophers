@@ -13,6 +13,6 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - name: make
-              run: make
+              run: cd philo && make
             - name: make unit-tests
-              run: make unit-tests
+              run: cd philo && make unit-tests
