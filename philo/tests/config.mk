@@ -13,6 +13,7 @@ PROJECT_SRCS = ../parser.c \
 				 ../utils/print_error.c \
 				 ../utils/free_rules.c \
 				 ../utils/utils.c \
+				 ../utils/monitor_utils.c \
 				../simulation.c \
 				../monitor.c \
 				../philo_routine.c \

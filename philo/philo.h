@@ -48,6 +48,7 @@ typedef struct s_rule
 }	t_rule;
 
 t_rule	*init_rules(int ac, char **av);
+void	put_number_on_table(t_rule **rules, int ac, char **av);
 int		init_left_forks(t_rule *rules);
 void	link_forks(t_rule *rules);
 int		init_philosophers(t_rule *rules);
@@ -80,4 +81,7 @@ void	ft_monitor(t_rule *rules);
 // Simulations functions
 void	ft_init_simulation(t_rule *rules);
 void	ft_join_threads(t_rule *rules);
+// Monitor functions
+int		ft_check_starvation(t_rule *rules);
+int		ft_check_full(t_rule *rules);
 #endif

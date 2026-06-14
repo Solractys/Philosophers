@@ -36,7 +36,7 @@ void	ft_print_death(t_rule *rules, long id)
 	pthread_mutex_unlock(&rules->print_lock);
 }
 
-static int	ft_check_starvation(t_rule *rules)
+int	ft_check_starvation(t_rule *rules)
 {
 	int		i;
 	long	last;
@@ -59,7 +59,7 @@ static int	ft_check_starvation(t_rule *rules)
 	return (0);
 }
 
-static int	ft_check_full(t_rule *rules)
+int	ft_check_full(t_rule *rules)
 {
 	int	i;
 	int	full;
@@ -80,16 +80,4 @@ static int	ft_check_full(t_rule *rules)
 		return (0);
 	ft_set_dead(rules);
 	return (1);
-}
-
-void	ft_monitor(t_rule *rules)
-{
-	while (1)
-	{
-		if (ft_check_starvation(rules))
-			return ;
-		if (ft_check_full(rules))
-			return ;
-		usleep(500);
-	}
 }

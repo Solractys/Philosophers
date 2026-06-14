@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <pthread.h>
 
 int	init_left_forks(t_rule *rules)
 {
@@ -76,6 +75,18 @@ int	init_philosophers(t_rule *rules)
 	return (1);
 }
 
+void	put_number_on_table(t_rule **rules, int ac, char **av)
+{
+	(*rules)->number_of_philosophers = ft_atol(av[1]);
+	(*rules)->time_to_die = ft_atol(av[2]);
+	(*rules)->time_to_eat = ft_atol(av[3]);
+	(*rules)->time_to_sleep = ft_atol(av[4]);
+	(*rules)->time_start = ft_get_time();
+	(*rules)->number_of_meals = -1;
+	if (ac == 6)
+		(*rules)->number_of_meals = ft_atol(av[5]);
+}
+
 t_rule	*init_rules(int ac, char **av)
 {
 	t_rule	*rules;
@@ -93,14 +104,7 @@ t_rule	*init_rules(int ac, char **av)
 		free(rules);
 		return (NULL);
 	}
-	rules->number_of_philosophers = ft_atol(av[1]);
-	rules->time_to_die = ft_atol(av[2]);
-	rules->time_to_eat = ft_atol(av[3]);
-	rules->time_to_sleep = ft_atol(av[4]);
-	rules->time_start = ft_get_time();
-	rules->number_of_meals = -1;
-	if (ac == 6)
-		rules->number_of_meals = ft_atol(av[5]);
+	put_number_on_table(&rules, ac, av);
 	if (!validade_times(rules) || !init_philosophers(rules))
 	{
 		free_rules(rules);
