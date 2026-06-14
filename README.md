@@ -20,7 +20,6 @@ Running philosophers with more than 200 philosophers may overload your machine.
 
 # Resources
 
-In this section, I will list all the content I used to understand the problem and develop this project.
 - [Oceano - Philosophers in C](https://www.youtube.com/watch?v=zOpzGHwJ3MU)
 - [Philosophers 42 Explained](https://github.com/DeRuina/philosophers)
 - [Unis threads in C](https://www.youtube.com/playlist?list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2)
