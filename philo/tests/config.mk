@@ -14,6 +14,7 @@ PROJECT_SRCS = ../parser.c \
 				 ../utils/free_rules.c \
 				 ../utils/utils.c \
 				../simulation.c \
+				../monitor.c \
 				../philo_routine.c \
 				 ../init_philo.c
 
