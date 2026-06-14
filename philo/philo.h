@@ -23,9 +23,11 @@ typedef struct s_rule	t_rule;
 
 typedef struct s_philo
 {
-	int					id;
+	long				id;
 	pthread_t			thread;
 	long				last_meal;
+	int					how_much_eat;
+	int					is_dead;
 	pthread_mutex_t		*left_fork;
 	pthread_mutex_t		*right_fork;
 	t_rule				*rules;
@@ -34,10 +36,12 @@ typedef struct s_philo
 typedef struct s_rule
 {
 	long		number_of_philosophers;
+	long		pos;
 	long		time_to_die;
 	long		time_to_eat;
 	long		time_to_sleep;
 	long		number_of_meals;
+	long		time_start;
 	t_philo		*philos;
 }	t_rule;
 
@@ -55,4 +59,15 @@ int		validade_times(t_rule *rules);
 long	ft_atol(char *str);
 size_t	ft_strlen(char *s);
 
+// Time functions
+long	ft_get_time(void);
+
+// Routine functions
+void	ft_usleep(t_rule *rules, long id, long time);
+int		ft_sleeping(t_rule *rules, long id);
+int		ft_dead(t_rule *rules, long id);
+void	ft_print_mutex(char *str, long id, t_rule *rules);
+int		ft_get_fork(t_rule *rules, long id);
+int		ft_eating(t_rule *rules, long id);
+void	ft_eat(t_rule *rules, long id);
 #endif

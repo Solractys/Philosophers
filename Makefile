@@ -9,6 +9,7 @@ SRC_FILES	= main.c \
 						init_philo.c \
 						utils/utils.c \
 						utils/print_error.c \
+						simulations.c \
 						utils/free_rules.c
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC_FILES))

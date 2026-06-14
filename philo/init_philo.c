@@ -66,6 +66,9 @@ int	init_philosophers(t_rule *rules)
 		rules->philos[i].left_fork = NULL;
 		rules->philos[i].right_fork = NULL;
 		rules->philos[i].rules = rules;
+		rules->philos[i].how_much_eat = 0;
+		rules->philos[i].is_dead = 0;
+		rules->pos = 0;
 		i++;
 	}
 	if (!init_left_forks(rules))
