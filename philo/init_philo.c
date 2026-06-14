@@ -61,14 +61,13 @@ int	init_philosophers(t_rule *rules)
 		return (0);
 	while (i < rules->number_of_philosophers)
 	{
-		rules->philos[i].id = i + 1;
+		rules->philos[i].id = i;
 		rules->philos[i].last_meal = 0;
 		rules->philos[i].left_fork = NULL;
 		rules->philos[i].right_fork = NULL;
-		rules->philos[i].rules = rules;
 		rules->philos[i].how_much_eat = 0;
 		rules->philos[i].is_dead = 0;
-		rules->pos = 0;
+		rules->philos[i].rules = rules;
 		i++;
 	}
 	if (!init_left_forks(rules))
@@ -87,10 +86,18 @@ t_rule	*init_rules(int ac, char **av)
 	if (!rules)
 		return (NULL);
 	rules->philos = NULL;
+	rules->dead = 0;
+	if (pthread_mutex_init(&rules->print_lock, NULL) != 0
+		|| pthread_mutex_init(&rules->state_lock, NULL) != 0)
+	{
+		free(rules);
+		return (NULL);
+	}
 	rules->number_of_philosophers = ft_atol(av[1]);
 	rules->time_to_die = ft_atol(av[2]);
 	rules->time_to_eat = ft_atol(av[3]);
 	rules->time_to_sleep = ft_atol(av[4]);
+	rules->time_start = ft_get_time();
 	rules->number_of_meals = -1;
 	if (ac == 6)
 		rules->number_of_meals = ft_atol(av[5]);

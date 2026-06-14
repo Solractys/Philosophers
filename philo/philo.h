@@ -35,14 +35,16 @@ typedef struct s_philo
 
 typedef struct s_rule
 {
-	long		number_of_philosophers;
-	long		pos;
-	long		time_to_die;
-	long		time_to_eat;
-	long		time_to_sleep;
-	long		number_of_meals;
-	long		time_start;
-	t_philo		*philos;
+	long				number_of_philosophers;
+	long				time_to_die;
+	long				time_to_eat;
+	long				time_to_sleep;
+	long				number_of_meals;
+	long				time_start;
+	int					dead;
+	pthread_mutex_t		print_lock;
+	pthread_mutex_t		state_lock;
+	t_philo				*philos;
 }	t_rule;
 
 t_rule	*init_rules(int ac, char **av);
@@ -63,11 +65,19 @@ size_t	ft_strlen(char *s);
 long	ft_get_time(void);
 
 // Routine functions
-void	ft_usleep(t_rule *rules, long id, long time);
-int		ft_sleeping(t_rule *rules, long id);
-int		ft_dead(t_rule *rules, long id);
+void	ft_usleep(t_rule *rules, long time);
 void	ft_print_mutex(char *str, long id, t_rule *rules);
 int		ft_get_fork(t_rule *rules, long id);
-int		ft_eating(t_rule *rules, long id);
 void	ft_eat(t_rule *rules, long id);
+int		ft_put_fork(t_rule *rules, long id);
+
+// State and monitor functions
+int		ft_is_dead(t_rule *rules);
+void	ft_set_dead(t_rule *rules);
+void	ft_print_death(t_rule *rules, long id);
+void	ft_monitor(t_rule *rules);
+
+// Simulations functions
+void	ft_init_simulation(t_rule *rules);
+void	ft_join_threads(t_rule *rules);
 #endif

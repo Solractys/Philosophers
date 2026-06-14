@@ -22,13 +22,12 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	rules = init_rules(ac, av);
-	// init simulation
-	// init_simulation(rules);
 	if (!rules)
 	{
 		print_error("Error: Invalid arguments\n");
 		return (1);
 	}
+	ft_init_simulation(rules);
 	free_rules(rules);
 	return (0);
 }

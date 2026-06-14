@@ -45,5 +45,7 @@ void	free_rules(t_rule *rules)
 		return ;
 	if (rules->philos)
 		free_philosophers(rules);
+	pthread_mutex_destroy(&rules->print_lock);
+	pthread_mutex_destroy(&rules->state_lock);
 	free(rules);
 }
