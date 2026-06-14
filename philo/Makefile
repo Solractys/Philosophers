@@ -9,6 +9,7 @@ SRC_FILES	= main.c \
 						init_philo.c \
 						utils/utils.c \
 						utils/print_error.c \
+						utils/monitor_utils.c \
 						simulation.c \
 						philo_routine.c \
 						monitor.c \
