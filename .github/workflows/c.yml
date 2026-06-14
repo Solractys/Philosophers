@@ -15,4 +15,4 @@ jobs:
             - name: make
               run: cd philo && make
             - name: make unit-tests
-              run: make unit-tests
+              run: cd philo && make unit-tests
